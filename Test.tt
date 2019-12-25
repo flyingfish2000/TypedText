@@ -1,0 +1,19 @@
+int a;
+int b;
+
+int main (void)
+{
+    int c;
+    int d;
+    a = c + d * (a - 3);
+    d = average(a, b*2);
+
+    return 1;
+}
+
+int average (int a, int b) {
+    int ave ;
+    ave = (a + b ) / 2;
+    return ave;
+
+}
