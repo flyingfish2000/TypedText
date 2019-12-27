@@ -1,19 +1,56 @@
+// test program
 int a;
 int b;
+float f1;
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct Point_3d {
+    struct Point pt_2d;
+    int z; 
+};
 
 int main (void)
 {
     int c;
     int d;
-    a = c + d * (a - 3);
-    d = average(a, b*2);
+    float f2;
+    int[4][4] matrix;   // array definition
+    
+    struct Point pt;
+    struct Point_3d    pt_3d;
 
+    pt.x = 10;
+    pt.y = pt.x * 2;
+
+    pt_3d.pt_2d.x = 10;
+    pt_3d.pt_2d.y = 20;
+    pt_3d.z = 30;
+
+    matrix[0][0] = 1;   // array member as left hand value
+    matrix[2][2] = 2;
+
+    f2 = matrix[3][3] * 4;  // reference array member in expression
+
+    a = c + d * (a - 3);
+    d = average(a, b*2); // calling function with arguments
+
+    doSomething();  // calling function without argument
     return 1;
 }
 
+// function with parameters
 int average (int a, int b) {
     int ave ;
-    ave = (a + b ) / 2;
+    ave = (a + b ) / 2.0; 
     return ave;
 
+}
+
+// function without parameters
+int doSomething(void){
+    return 0;
 }

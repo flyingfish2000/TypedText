@@ -151,9 +151,11 @@ IMPORT   : 'import';
 SIZEOF   : 'sizeof';
 
 IDENTIFIER 
-        : [a-zA-Z][a-zA-Z0-9]*
+        : [a-zA-Z]([a-zA-Z0-9] | '_' )*
         ;
 
 INTEGER_NUM     : [0-9]+ ;
 FLOAT_NUM      : INTEGER_NUM '.' INTEGER_NUM; 
 WS  :   [ \t\n\r]+ -> channel(1); 
+SL_COMMENT
+    :   '//' .*? '\n' -> channel(2); // channel(COMMENTS)   // single line comment
