@@ -38,7 +38,9 @@ int main (void)
     a = c + d * (a - 3);
     d = average(a, b*2); // calling function with arguments
 
-    doSomething();  // calling function without argument
+    checkIf();  // calling function without argument, check if statments
+    checkWhile(); 
+
     return 1;
 }
 
@@ -50,7 +52,37 @@ int average (int a, int b) {
 
 }
 
-// function without parameters
-int doSomething(void){
-    return 0;
+int checkWhile(void) {
+    int cont, sum;
+
+    cont = 0;
+    sum = 0;
+    while (cont != 10){
+        sum = sum + 10;
+        cont = cont + 1;
+    }
+    return sum;
+}
+
+// function without parameters, contains embedded if
+int checkIf(void){
+    int a, b, c;
+
+    int max;
+    if(a >= b) {
+        if (a >= c){
+            max = a;
+        }else{
+            max = c;
+        }
+    }else{
+        if (b >= c){
+            max = b;
+        }else{
+            max = c;
+        }
+    }
+
+
+    return max;
 }

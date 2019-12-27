@@ -41,3 +41,8 @@ lib/TypedTextParser$Top_defsContext.class
 lib/TypedTextParser$TypeContext.class
 lib/TypedTextParser$Typeref_baseContext.class
 lib/TypedTextParser$TyperefContext.class
+lib/TypedTextParser$Expr3Context.class
+lib/TypedTextParser$Expr4Context.class
+lib/TypedTextParser$Expr5Context.class
+lib/TypedTextParser$If_stmtContext.class
+lib/TypedTextParser$While_stmtContext.class

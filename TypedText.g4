@@ -12,7 +12,7 @@ top_defs : (defun
 defun : typeref name '(' params ')' block ;
 
 defvars
-    : type name (',' type name )* ';'
+    : type name (','  name )* ';'
     ;
 
 defstruct
@@ -78,6 +78,16 @@ stmt
     | expr ';'
     | block // embedded block
     | return_stmt
+    | if_stmt
+    | while_stmt
+    ;
+
+while_stmt
+    : WHILE '(' expr ')' stmt
+    ;
+
+if_stmt
+    : IF '(' expr ')' stmt (ELSE stmt)?
     ;
 
 return_stmt
@@ -86,15 +96,27 @@ return_stmt
 
  expr
     : term '=' expr
-    | expr2
+    | expr5
     ;
  
+ expr5
+    : expr4 ('||' expr4)*
+    ;
+
+expr4
+    : expr3 ('&&' expr3)*
+    ;
+
+expr3
+    : expr2 ( ('>' | '<' | '>=' | '<=' | '==' | '!=') expr2)*
+    ;
+
  expr2
     : expr1 ( ('+' | '-') expr1 )*
     ;
 
  expr1
-    : term (('*' | '/') term)*
+    : term (('*' | '/' | '%') term)*
     ;
 
 term
