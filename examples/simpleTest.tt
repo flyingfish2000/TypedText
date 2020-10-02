@@ -1,0 +1,16 @@
+// test program
+int a;
+float f1, f2;
+int[4][4] matrix;
+struct Point pt;
+struct Line line;
+
+struct Point {
+    int x;
+    int y;
+};
+
+struct Line {
+    struct Point ptSrc;
+    struct Point ptDest;
+};

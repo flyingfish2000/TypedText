@@ -1,18 +1,18 @@
 grammar TypedText;	
 
 compilation_unit: 
-            topDefinitions=top_def* EOF
+            topDefs+=top_def* EOF
             ;
 
-top_def : defun
-        | defvars
-        | defstruct
+top_def : defun         # defunction
+        | defvars       # defvariables
+        | defstruct     # defstructure
           ;
 
 defun : typeref name '(' params ')' block ;
 
 defvars
-    : type name (','  name )* ';'
+    : type vars+=name (','  vars+=name )* ';'
     ;
 
 defstruct
@@ -20,11 +20,11 @@ defstruct
     ;
 
 member_list
-    : '{' (slot ';')+ '}'
+    : '{' (slots+=slot ';')+ '}'
     ;
 
 slot
-    : type name 
+    : type name
     ;
 
 block
@@ -45,18 +45,18 @@ type
 
 // basic types
 typeref_base
-    : VOID
-    | CHAR
-    | SHORT
-    | INT
-    | LONG
-    | FLOAT
-    | STRUCT IDENTIFIER
+    : VOID                  # voidType
+    | CHAR                  # charType
+    | SHORT                 # shortType
+    | INT                   # intType
+    | LONG                  # longType
+    | FLOAT                 # floatType
+    | STRUCT IDENTIFIER     # structType
     ;
 
-// basic type and array type
+// basic types and array types
 typeref
-    : typeref_base ('[' (INTEGER_NUM)* ']')*
+    : typeref_base ('[' dimens += INTEGER_NUM ']')*
     ;
 // function name is just an ID
 name
@@ -111,11 +111,11 @@ expr3
     : expr2 ( ('>' | '<' | '>=' | '<=' | '==' | '!=') expr2)*
     ;
 
- expr2
+expr2
     : expr1 ( ('+' | '-') expr1 )*
     ;
 
- expr1
+expr1
     : term (('*' | '/' | '%') term)*
     ;
 

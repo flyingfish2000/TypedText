@@ -12,7 +12,7 @@ top_defs : (defun
 defun : typeref name '(' params ')' block ;
 
 defvars
-    : type name (','  name )* ';'
+    : types name (','  name )* ';'
     ;
 
 defstruct
@@ -24,7 +24,7 @@ member_list
     ;
 
 slot
-    : type name 
+    : types name
     ;
 
 block
@@ -39,7 +39,7 @@ stmts
     : (stmt)*
     ;
 
-type
+types
     :typeref
     ;
 
@@ -54,7 +54,7 @@ typeref_base
     | STRUCT IDENTIFIER
     ;
 
-// basic type and array type
+// basic types and array types
 typeref
     : typeref_base ('[' (INTEGER_NUM)* ']')*
     ;
@@ -68,9 +68,9 @@ params
     : VOID
     | param (',' param)*
     ;
-// type or typeref
+// types or typeref
 param
-    : type name
+    : types name
     ;
 
 stmt
@@ -94,12 +94,12 @@ return_stmt
     : RETURN expr // must return something
     ;
 
- expr
+expr
     : term '=' expr
     | expr5
     ;
  
- expr5
+expr5
     : expr4 ('||' expr4)*
     ;
 

@@ -1,7 +1,7 @@
 // test program
 int a;
 int b;
-float f1, f2;
+float f1;
 
 struct Point {
     int x;
