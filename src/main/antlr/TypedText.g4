@@ -65,8 +65,8 @@ name
 
 // can be func(void) or func(int a, float b, struct Point pt)
 params
-    : VOID
-    | param (',' param)*
+    : VOID                  # paramEmpty
+    | plist+=param (',' plist+=param)*    # paramList
     ;
 // type or typeref
 param
@@ -74,12 +74,12 @@ param
     ;
 
 stmt
-    : ';' // empty statement
-    | expr ';'
-    | block // embedded block
-    | return_stmt
-    | if_stmt
-    | while_stmt
+    : ';'           #eptStmt    // empty statement
+    | expr ';'      #exprStmt
+    | block         #blockStmt  // embedded block
+    | return_stmt   #rtnStmt
+    | if_stmt       #ifStmt
+    | while_stmt    #whileStmt
     ;
 
 while_stmt
@@ -95,49 +95,49 @@ return_stmt
     ;
 
 expr
-    : term '=' expr
-    | expr5
+    : term '=' expr     # assign
+    | expr5             # subExpr5
     ;
  
 expr5
-    : expr4 ('||' expr4)*
+    : left=expr4 ('||' right+=expr4)*
     ;
 
 expr4
-    : expr3 ('&&' expr3)*
+    : left=expr3 ('&&' right+=expr3)*
     ;
 
 expr3
-    : expr2 ( ('>' | '<' | '>=' | '<=' | '==' | '!=') expr2)*
+    : left=expr2 ( op+=('>' | '<' | '>=' | '<=' | '==' | '!=') right+=expr2)*
     ;
 
 expr2
-    : expr1 ( ('+' | '-') expr1 )*
+    : left=expr1 ( op+=('+' | '-') right+=expr1 )*
     ;
 
 expr1
-    : term (('*' | '/' | '%') term)*
+    : left=term ( op+=('*' | '/' | '%') right+=term)*
     ;
 
 term
-    : primary (postfix)*
+    : primary (posfixes+=postfix)*
     ;
 
 postfix
-    : '.' name      // structure member
-    | '[' expr ']'  // array member reference
-    |  '(' args ')' // function call, as primary can be IDENTIFIER
+    : '.' name      #structMember // structure member
+    | '[' expr ']'  #arrayMember // array member reference
+    |  '(' args ')' #funCall // function call, as primary can be IDENTIFIER
     ;     
 
 args
-    :  ( expr (',' expr)* )? // functionall may not have args at all, or 1, 2, many
+    :  ( funArgs+=expr (',' funArgs+=expr)* )? // functionall may not have args at all, or 1, 2, many
     ;
 
 primary
-    : INTEGER_NUM
-    | FLOAT_NUM
-    | IDENTIFIER
-    | '(' expr ')'
+    : INTEGER_NUM   #intLit
+    | FLOAT_NUM     #floatLit
+    | IDENTIFIER    #primarId
+    | '(' expr ')'  #primaryExp
     ;
 
 // lexical rules from here

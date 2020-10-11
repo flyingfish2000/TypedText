@@ -1,6 +1,8 @@
 package parsing
 
+import ast.DefinedFunction
 import ast.toAst
+import me.tomassetti.kolasu.model.multilineString
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
@@ -18,6 +20,12 @@ fun parseCode(code: String) : TypedTextParser.Compilation_unitContext = TypedTex
 
 fun main(args: Array<String>) {
     val root=parseCode(readExampleCode()).toAst()
+    for(ent in root.entities){
+        if (ent is DefinedFunction){
+            println(ent.body.multilineString())
+        }
+    }
+    //println(root.multilineString())
     // readExampleCode is a simple function that read the code of our example file
-    println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
+    //println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
 }
