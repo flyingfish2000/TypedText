@@ -68,7 +68,8 @@ params
     : VOID                  # paramEmpty
     | plist+=param (',' plist+=param)*    # paramList
     ;
-// type or typeref
+// type or typeref, need to allow passing array, i.e. in function
+// int average(int[] scores, int length), scores can be an array.
 param
     : type name
     ;

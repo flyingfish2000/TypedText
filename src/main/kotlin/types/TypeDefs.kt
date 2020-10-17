@@ -27,7 +27,20 @@ class Member (val name: String, val typeDesc: TypeDesc)
 
 class StructType(val name:String, var members:List<Member>) : TypeDef()
 {
+    override fun isStruct(): Boolean {
+        return true
+    }
     override fun size(): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+}
+
+class ArrayType(val baseTypeDesc: TypeDesc, val dims: IntArray) : TypeDef(){
+    override fun size(): Int{
+        TODO("array size not implemented")
+    }
+
+    override fun isArray(): Boolean {
+        return true
     }
 }

@@ -19,7 +19,7 @@ fun lexerForCode(code: String) = TypedTextLexer(ANTLRInputStream(StringReader(co
 fun parseCode(code: String) : TypedTextParser.Compilation_unitContext = TypedTextParser(CommonTokenStream(lexerForCode(code))).compilation_unit()
 
 fun main(args: Array<String>) {
-    val root=parseCode(readExampleCode()).toAst()
+    val root=parseCode(readExampleCode()).toAst(true)
     for(ent in root.entities){
         if (ent is DefinedFunction){
             println(ent.body.multilineString())

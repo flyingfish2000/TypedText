@@ -16,4 +16,6 @@ class FloatTypeRef(val name: String, position: Position?) : TypeRef(position)
 
 class StructTypeRef(val name: String, position: Position?) : TypeRef(position)
 
+class ArrayTypeRef(val baseRef: TypeRef, val dims: IntArray, position: Position?) : TypeRef(position)
+
 class DummyTypeRef(val name: String, position: Position?) : TypeRef(position)
