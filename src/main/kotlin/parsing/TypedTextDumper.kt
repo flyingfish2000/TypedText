@@ -1,6 +1,7 @@
 package parsing
 
 import ast.DefinedFunction
+import ast.resolveSymbols
 import ast.toAst
 import me.tomassetti.kolasu.model.multilineString
 import org.antlr.v4.runtime.ANTLRInputStream
@@ -19,11 +20,25 @@ fun lexerForCode(code: String) = TypedTextLexer(ANTLRInputStream(StringReader(co
 fun parseCode(code: String) : TypedTextParser.Compilation_unitContext = TypedTextParser(CommonTokenStream(lexerForCode(code))).compilation_unit()
 
 fun main(args: Array<String>) {
+    val parseResult = AntlrParserFacade.parse(readExampleCode())
+    if (!parseResult.isCorrect()){
+        parseResult.errors.forEach{
+            println("${it.message}, ${it.position}")
+        }
+        return
+    }
+    val root = parseResult.root!!.toAst(true)
+
+    /*
     val root=parseCode(readExampleCode()).toAst(true)
     for(ent in root.entities){
         if (ent is DefinedFunction){
             println(ent.body.multilineString())
         }
+    }*/
+    val errors = root.resolveSymbols()
+    errors.forEach{
+        println("symbol resolver - ${it.message}, at ${it.position}")
     }
     //println(root.multilineString())
     // readExampleCode is a simple function that read the code of our example file

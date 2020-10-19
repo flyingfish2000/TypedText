@@ -1,7 +1,9 @@
 // test program
 int a;
+// a = 10;  // illegal, statement is not allowed in global scope
 float f1, f2;
 int[4][4] matrix;
+int[] intPt;
 struct Point pt1, pt2;
 struct Line line;
 
@@ -17,14 +19,18 @@ struct Line {
 int main (void){
     int score1, score2;
     float ave;
-    ave = 3 + 4 * 5 - 2 + 4 / 2 + 10;
-    ave = average(score1, score2) * 2.0;
+    ave = 3 + 4 * f01 - f2 + 4 / 2 + 10;
+    ave = averages(score1, score2) * 2.0;
 }
 
 // function with parameters
 int average (int a, int b) {
     int ave ;
-    ave = (a + b ) / 2.0;
+    ave1 = (a + b ) / 2.0;
     return ave;
+}
 
+// function with array parameters
+int average2(int[] scores, int length){
+    return 0;
 }

@@ -5,9 +5,11 @@ import me.tomassetti.kolasu.mapping.toPosition
 import types.*
 import whu.typedtext.TypedTextParser.*
 
+/*
 class TypedTextParseTreeToAstMapper : ParseTreeToAstMapper<Compilation_unitContext, Compilation_unit> {
     override fun map(parseTreeNode: Compilation_unitContext): Compilation_unit = parseTreeNode.toAst()
 }
+*/
 
 fun TypeContext.toAst(withPos: Boolean = false) : TypeDesc{
     return this.typeref().toAst(withPos)
@@ -15,7 +17,7 @@ fun TypeContext.toAst(withPos: Boolean = false) : TypeDesc{
 
 fun TyperefContext.toAst(withPos: Boolean = false): TypeDesc{
     val typeRef = this.typeref_base().toAst(withPos)
-    if(this.dimens.count() > 0){
+    if(this.dimCount > 0){ // if(this.dimens.count() > 0){
         val dims = this.dimens.map{it.text.toInt()}
         val arrayTypeRef = ArrayTypeRef(typeRef, dims.toIntArray(), toPosition(withPos))
         return TypeDesc(arrayTypeRef)

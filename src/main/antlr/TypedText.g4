@@ -55,8 +55,11 @@ typeref_base
     ;
 
 // basic types and array types
+// for arrays, when you define a variable of array table, you have to specify the array dimensions, i.e. int[3][3]
+// but for functions, it is allowed to have a parameter of array type without specific dimensions, i.e. float average(int[] scores, length)
 typeref
-    : typeref_base ('[' dimens += INTEGER_NUM ']')*
+locals [int dimCount=0;]
+    : typeref_base ('['{$dimCount++;} dimens += INTEGER_NUM? ']')*
     ;
 // function name is just an ID
 name
