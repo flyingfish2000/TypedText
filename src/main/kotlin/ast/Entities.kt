@@ -10,7 +10,9 @@ abstract class Entity(var refCount:Int = 0)
 
 // a variable has a name and type
 // todo: a variable can have an initial expression
-open class DefinedVariable(val name: String, val typeDesc: TypeDesc) : Entity(0)
+open class DefinedVariable(val name: String, val typeDesc: TypeDesc) : Entity(0){
+    var initExp : Expression? = null
+}
 
 class DefinedVariables(val vars: List<DefinedVariable>): Entity(0)
 

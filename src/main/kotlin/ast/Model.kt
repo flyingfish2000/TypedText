@@ -24,20 +24,26 @@ data class Container(val variables:List<DefinedVariable>, val statements:List<St
 data class DummyStatment(val name: String, override val position: Position? = null) : Statement
 data class BlockStatment(val stmts: Container, override val position: Position? = null) : Statement
 data class ExprStatement(val expr: Expression, override val position: Position? = null) : Statement
+data class IfStatement(val condExpr: Expression, val tStmt: Statement, val fStmt: Statement? = null, override val position: Position? = null):Statement
+data class WhileStatement(val condExpr: Expression, val loopStmt: Statement, override val position: Position? = null):Statement
+data class RtnStatement(val resultExpr: Expression, override val position: Position? = null):Statement
 
 // expression
-// todo: need to consider LHS
+// left hand expression, variable, array and member expression are the only two LHS expr
+abstract class LHSExp : Expression
 data class UnknownExp(val exp:String = "unknown", override val position: Position? = null) : Expression
 
 data class IntLiteral(val value: String, override val position: Position? = null) : Expression
 
 data class FloatLiteral(val value: String, override val position: Position? = null) : Expression
 
-data class VariableExp(val varName: String, override val position: Position? = null) : Expression
+data class VariableExp(val varName: String, override val position: Position? = null) : LHSExp() {
+    var def : DefinedVariable? = null // the reference to its definition
+}
 
-data class MemberExp(val varExp: Expression, val member: String, override val position: Position? = null) : Expression
+data class MemberExp(val varExp: Expression, val member: String, override val position: Position? = null) : LHSExp()
 
-data class ArrayRefExp(val varExp: Expression, val idxExp: Expression, override val position: Position? = null) : Expression
+data class ArrayRefExp(val varExp: Expression, val idxExp: Expression, override val position: Position? = null) : LHSExp()
 
 data class FuncallExpr(val funExp: Expression, val args: List<Expression>, override val position: Position? = null) : Expression
 

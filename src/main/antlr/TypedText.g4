@@ -12,7 +12,8 @@ top_def : defun         # defunction
 defun : typeref name '(' params ')' block ;
 
 defvars
-    : type vars+=name (','  vars+=name )* ';'
+locals [int idx=0, List<Integer> indices=new ArrayList<Integer>()]
+    : type vars+=name ('=' {$indices.add($idx);} inits+=expr)? (',' {$idx++;} vars+=name ('=' {$indices.add($idx);} inits+=expr)? )* ';'
     ;
 
 defstruct
@@ -91,7 +92,7 @@ while_stmt
     ;
 
 if_stmt
-    : IF '(' expr ')' stmt (ELSE stmt)?
+    : IF '(' expr ')' tstmt=stmt (ELSE fstmt=stmt)?
     ;
 
 return_stmt

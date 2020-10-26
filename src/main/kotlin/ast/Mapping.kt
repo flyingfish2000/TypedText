@@ -112,9 +112,15 @@ fun DefunContext.toAst(withPos: Boolean = false) : DefinedFunction{
 }
 
 // a list of variables with the same type
+// each variable my have an optional init expression
 fun DefvarsContext.toAst(withPos: Boolean = false): List<DefinedVariable>{
     val varType = this.type().toAst(withPos)
-    return this.vars.map{DefinedVariable(it.text, varType)}
+    var defVars = this.vars.map{DefinedVariable(it.text, varType)}
+    for((idx, initExp) in this.inits.withIndex() ){
+        val varIdx = this.indices[idx]
+        defVars[varIdx].initExp = initExp.toAst(withPos)
+    }
+    return defVars
 }
 
 // a block can have many variables with different types
@@ -147,7 +153,7 @@ fun StmtContext.toAst(withPos: Boolean = false): Statement{
             return BlockStatment(container)
         }
         is IfStmtContext -> {
-            return DummyStatment("if")
+            return this.toAst(withPos) //DummyStatment("if")
         }
         is RtnStmtContext -> {
             return DummyStatment("return")
@@ -158,6 +164,13 @@ fun StmtContext.toAst(withPos: Boolean = false): Statement{
         else ->
             return DummyStatment("Unknown")
     }
+}
+
+fun If_stmtContext.toAst(withPos: Boolean = false):IfStatement{
+    val condExp = this.expr().toAst(withPos)
+    val trueStmt = this.tstmt.toAst(withPos)
+    val falseStmt = this.fstmt.toAst(withPos)
+    return IfStatement(condExp, trueStmt, falseStmt)
 }
 
 fun ExprContext.toAst(withPos: Boolean = false):Expression{
@@ -297,9 +310,9 @@ fun Top_defContext.toAst(withPos: Boolean = false) : Entity {
     // check the content in the Top_defContxt
     when(this){
         is DefvariablesContext ->{
-            val varType = this.defvars().type().toAst(withPos)
-
-            val vars = this.defvars().vars.map{DefinedVariable(it.text, varType)}
+            val vars = this.defvars().toAst()
+            //val varType = this.defvars().type().toAst(withPos)
+            //val vars = this.defvars().vars.map{DefinedVariable(it.text, varType)}
             return DefinedVariables(vars)
         }
         is DefstructureContext ->{

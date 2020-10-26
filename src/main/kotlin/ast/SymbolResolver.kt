@@ -68,6 +68,12 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
             is VariableExp ->{
                 if(!symbolTable.hasName(expr.varName)) {
                     errors.add(Error("unable to resolve symbol: ${expr.varName}", expr.position))
+                }else{
+                    val entity = symbolTable.get(expr.varName)
+                    if(entity != null) {
+                        entity.refCount++
+                        expr.def = entity as DefinedVariable
+                    }
                 }
             }
             is MemberExp ->{
@@ -114,7 +120,9 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
         }
     }
 
-    // resolve all functions
+    // resolve symbols in the init expression of global variables.
+
+    // resolve symbols in all functions
     funs.forEach{ entity ->
         val func = entity as DefinedFunction
         // create a new function scope, and add parameters to this scope
