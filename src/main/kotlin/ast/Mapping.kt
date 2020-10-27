@@ -153,17 +153,28 @@ fun StmtContext.toAst(withPos: Boolean = false): Statement{
             return BlockStatment(container)
         }
         is IfStmtContext -> {
-            return this.toAst(withPos) //DummyStatment("if")
+            return this.if_stmt().toAst(withPos)
         }
         is RtnStmtContext -> {
-            return DummyStatment("return")
+            return this.return_stmt().toAst(withPos)
         }
         is WhileStmtContext -> {
-            return DummyStatment("while")
+            return this.while_stmt().toAst(withPos)
         }
         else ->
             return DummyStatment("Unknown")
     }
+}
+
+fun Return_stmtContext.toAst(withPos: Boolean = false) : RtnStatement{
+    val rtnExp = this.expr().toAst(withPos)
+    return RtnStatement(rtnExp)
+}
+
+fun While_stmtContext.toAst(withPos: Boolean = false) : WhileStatement{
+    val condExp = this.expr().toAst(withPos)
+    val loopStmt = this.stmt().toAst(withPos)
+    return WhileStatement(condExp, loopStmt)
 }
 
 fun If_stmtContext.toAst(withPos: Boolean = false):IfStatement{
