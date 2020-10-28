@@ -51,16 +51,16 @@ class SymbolTable(val parent: SymbolTable? = null) {
 fun Compilation_unit.resolveSymbols() : List<Error> {
     val errors = LinkedList<Error>()
     val globalScope = SymbolTable() // global scope has no parent
-    val combined = this.entities.filter{ it is DefinedVariables}
+    val combined = this.entities.filterIsInstance<DefinedVariables>()
     val allVariables = combined.map{(it as DefinedVariables).vars}.flatten()
     // add all variables to the top symbol table
     allVariables.forEach{
         globalScope.addSymbol(it.name, it)
     }
     // add all functions to the top symbol table
-    val funs = this.entities.filter { it is DefinedFunction }
+    val funs = this.entities.filterIsInstance<DefinedFunction>()
     funs.forEach{
-        globalScope.addSymbol((it as DefinedFunction).name, it)
+        globalScope.addSymbol(it.name, it)
     }
 
     fun resolveExpression(expr: Expression, symbolTable: SymbolTable) {
@@ -70,9 +70,11 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
                     errors.add(Error("unable to resolve symbol: ${expr.varName}", expr.position))
                 }else{
                     val entity = symbolTable.get(expr.varName)
+                    if(entity is DefinedFunction)
+                        println("symbol is a function")
                     if(entity != null) {
                         entity.refCount++
-                        expr.def = entity as DefinedVariable
+                        expr.definition = entity
                     }
                 }
             }
@@ -101,25 +103,41 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
         }
     }
 
-    fun resolveContainer(container: Container, symbolTable: SymbolTable){
-        // container has its own local symbol table
-        container.variables.forEach{
-            symbolTable.addSymbol(it.name, it)
-        }
-        container.statements.forEach{
-            when(it){
-                is BlockStatment ->{
-                    // create new scope
-                    val localScope = SymbolTable(symbolTable)
-                    resolveContainer(it.stmts, localScope)
+
+    // resolve symbols in statements
+    fun resolveStatement(stmt: Statement, symbolTable: SymbolTable) {
+        when (stmt){
+            is BlockStatment -> {
+                // create new scope
+                val localScope = SymbolTable(symbolTable)
+                // add local variables, and then go through its statements
+                stmt.block.variables.forEach {
+                    localScope.addSymbol(it.name, it)
                 }
-                is ExprStatement -> {
-                    resolveExpression(it.expr, symbolTable)
+                stmt.block.statements.forEach {
+                    resolveStatement(it, localScope)
                 }
+            }
+            is ExprStatement -> {
+                resolveExpression(stmt.expr, symbolTable)
+            }
+            is IfStatement ->{
+                resolveExpression(stmt.condExpr, symbolTable)
+                // the true statement can be a block or single statement
+                resolveStatement(stmt.tStmt, symbolTable)
+                // the false statment can be null
+                if(stmt.fStmt != null)
+                    resolveStatement(stmt.fStmt, symbolTable)
+            }
+            is WhileStatement ->{
+                resolveExpression(stmt.condExpr, symbolTable)
+                resolveStatement(stmt.loopStmt, symbolTable)
+            }
+            is RtnStatement -> {
+                resolveExpression(stmt.resultExpr, symbolTable)
             }
         }
     }
-
     // resolve symbols in the init expression of global variables.
 
     // resolve symbols in all functions
@@ -130,7 +148,7 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
         func.params.forEach{
             funScope.addSymbol(it.name, it)
         }
-        resolveContainer(func.body, funScope)
+        resolveStatement(func.body, funScope)
     }
 
 

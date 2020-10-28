@@ -22,7 +22,7 @@ data class Top_def(override val position: Position? = null) : Node {
 data class Container(val variables:List<DefinedVariable>, val statements:List<Statement>, override val position: Position? = null) : Node{}
 
 data class DummyStatment(val name: String, override val position: Position? = null) : Statement
-data class BlockStatment(val stmts: Container, override val position: Position? = null) : Statement
+data class BlockStatment(val block: Container, override val position: Position? = null) : Statement
 data class ExprStatement(val expr: Expression, override val position: Position? = null) : Statement
 data class IfStatement(val condExpr: Expression, val tStmt: Statement, val fStmt: Statement? = null, override val position: Position? = null):Statement
 data class WhileStatement(val condExpr: Expression, val loopStmt: Statement, override val position: Position? = null):Statement
@@ -38,7 +38,8 @@ data class IntLiteral(val value: String, override val position: Position? = null
 data class FloatLiteral(val value: String, override val position: Position? = null) : Expression
 
 data class VariableExp(val varName: String, override val position: Position? = null) : LHSExp() {
-    var def : DefinedVariable? = null // the reference to its definition
+    var definition : Entity? = null // the reference to its definition, can be a variable or function,
+    // but when the symbol is a function, it cannot be cannot be LHS, it may be ok, as the check is first done on FuncallExpr.
 }
 
 data class MemberExp(val varExp: Expression, val member: String, override val position: Position? = null) : LHSExp()

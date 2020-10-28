@@ -22,7 +22,7 @@ class Parameter (name: String, typeDesc: TypeDesc) : DefinedVariable(name, typeD
 {
     fun isParam():Boolean = true
 }
-class DefinedFunction(val name: String, val returnType: TypeDesc, val params: List<Parameter>, val body: Container) : Entity(0)
+class DefinedFunction(val name: String, val returnType: TypeDesc, val params: List<Parameter>, val body: BlockStatment) : Entity(0)
 
 // todo: a structure definition needs a member list, which is a list of DefinedVariables(?)
 class DefinedStruct(val name: String, val typeDesc: TypeDesc) : Entity(0)

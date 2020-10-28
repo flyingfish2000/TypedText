@@ -21,16 +21,19 @@ float f3;
 
 int main (void){
     int score1, score2;
-    float ave;
-    ave = 3 + 4 * f01 - f2 + 4 / 2 + 10;
-    ave = averages(score1, score2) * 2.0;
+    float ave = 1;
+    if(ave > 1){
+        int ave2 = 2;
+        ave = 3 + 4 * f01 - f2 + 4 / 2 + 10;
+        ave2 = average(score1, score2) * 2.0;
+    }
 }
 
 // function with parameters
 int average (int a, int b) {
-    int ave ;
-    ave1 = (a + b ) / 2.0;
-    return ave;
+    int ave = 0;
+    ave = (a + b ) / 2.0;
+    return ave2;
 }
 
 // function with array parameters

@@ -34,7 +34,7 @@ class AstTest {
         val ast = AntlrParserFacade.parse(code).root!!.toAst() // result is Compilation_unit
         // check the entities
         val defun = ast.entities[0] as DefinedFunction
-        val stmt1 = defun.body.statements[0] as ExprStatement
+        val stmt1 = defun.body.block.statements[0] as ExprStatement
         val exp1 = stmt1.expr as AssignExpr
 
         val expected = MemberExp(VariableExp("pt1"), "x")

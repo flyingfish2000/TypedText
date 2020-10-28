@@ -108,7 +108,7 @@ fun DefunContext.toAst(withPos: Boolean = false) : DefinedFunction{
     val funName = this.name().text // function name
     val params = this.params().toAst(withPos) // function params
     val body = this.block().toAst(withPos)
-    return DefinedFunction(funName, rtnType, params, body)
+    return DefinedFunction(funName, rtnType, params, BlockStatment(body))
 }
 
 // a list of variables with the same type
@@ -180,7 +180,7 @@ fun While_stmtContext.toAst(withPos: Boolean = false) : WhileStatement{
 fun If_stmtContext.toAst(withPos: Boolean = false):IfStatement{
     val condExp = this.expr().toAst(withPos)
     val trueStmt = this.tstmt.toAst(withPos)
-    val falseStmt = this.fstmt.toAst(withPos)
+    val falseStmt = this.fstmt?.toAst(withPos)
     return IfStatement(condExp, trueStmt, falseStmt)
 }
 
