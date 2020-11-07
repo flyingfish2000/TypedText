@@ -67,11 +67,11 @@ fun Compilation_unit.resolveSymbols() : List<Error> {
         when (expr){
             is VariableExp ->{
                 if(!symbolTable.hasName(expr.varName)) {
-                    errors.add(Error("unable to resolve symbol: ${expr.varName}", expr.position))
+                    errors.add(Error("SymbolResolver: unable to resolve symbol: ${expr.varName}", expr.position))
                 }else{
                     val entity = symbolTable.get(expr.varName)
-                    if(entity is DefinedFunction)
-                        println("symbol is a function")
+                    //if(entity is DefinedFunction)
+                    //    println("symbol is a function")
                     if(entity != null) {
                         entity.refCount++
                         expr.definition = entity

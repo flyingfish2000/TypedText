@@ -1,6 +1,7 @@
 // test program
+// Integer tt;      // Integer is not a valid type in the grammar, syntax error.
 int a, b = 4, c, d = 2;
-// a = 10;  // illegal, statement is not allowed in global scope
+// a = 10;  // illegal, statement is not allowed in global scope, syntax error.
 float f1, f2 = 2;
 int[4][4] matrix;
 int[] intPt;
@@ -8,14 +9,21 @@ struct Point pt1, pt2;
 struct Line line;
 
 struct Point {
+    int[4] masks;
     int x;
     int y;
 };
 
 struct Line {
+    struct Point[2] pts;
     struct Point ptSrc;
     struct Point ptDest;
 };
+
+struct Square{
+    struct Point[4] pts;
+};
+
 
 float f3;
 

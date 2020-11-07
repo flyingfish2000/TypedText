@@ -8,14 +8,49 @@ abstract class TypeRef(val position : Position? = null){
 
 }
 
-class IntegerTypeRef(val name: String, position: Position?) : TypeRef(position){
+abstract class NamedTypeRef(val name: String, position: Position? = null) : TypeRef(position){
+    override fun equals(other: Any?): Boolean {
+        if(this === other ) return true
+
+        var equal = false
+        if(other != null){
+            if(this::class == other::class )
+                equal = true
+        }
+        return equal
+    }
+    override fun hashCode(): Int {
+        return name.hashCode()
+    }
+}
+
+class IntegerTypeRef(name: String = "int", position: Position? = null) : NamedTypeRef(name, position){
 
 }
 
-class FloatTypeRef(val name: String, position: Position?) : TypeRef(position)
+class FloatTypeRef(name: String = "float", position: Position? = null) : NamedTypeRef(name, position)
 
-class StructTypeRef(val name: String, position: Position?) : TypeRef(position)
+class CharTypeRef(name: String = "char", position: Position? = null) : NamedTypeRef(name, position)
 
-class ArrayTypeRef(val baseRef: TypeRef, val dims: IntArray, position: Position?) : TypeRef(position)
+class ShortTypeRef(name: String = "short", position: Position? = null) : NamedTypeRef(name, position)
 
-class DummyTypeRef(val name: String, position: Position?) : TypeRef(position)
+class StructTypeRef(name: String, position: Position? = null) : NamedTypeRef(name, position)
+
+// array is derivative type, doesn't have a name
+class ArrayTypeRef(val baseRef: TypeRef, val dims: IntArray, position: Position? = null) : TypeRef(position){
+    override fun equals(other: Any?): Boolean {
+        if(this === other) return true
+        var equal = false
+        if(other != null){
+            if(other is ArrayTypeRef)
+                if(this.baseRef::class == other.baseRef::class )
+                    equal = true
+        }
+        return equal
+    }
+    override fun hashCode(): Int {
+        return baseRef.hashCode()*31 + dims.contentHashCode()
+    }
+}
+
+class DummyTypeRef(val name: String, position: Position?=null) : TypeRef(position)

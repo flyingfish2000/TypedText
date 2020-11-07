@@ -2,6 +2,8 @@ package types
 // define the types,
 abstract class TypeDef{
     abstract fun size(): Int
+    open fun isChar(): Boolean = false
+    open fun isShort(): Boolean = false
     open fun isInt(): Boolean =  false
     open fun isFloat(): Boolean = false
     open fun isArray(): Boolean = false
@@ -9,13 +11,25 @@ abstract class TypeDef{
     open fun isFunction(): Boolean = false
 }
 // for the family of "int" types, including short, int, long
-class IntegerType(val name:String) : TypeDef()
+class IntegerType(val name:String = "int") : TypeDef()
 {
     override fun size(): Int = 4 // 4 bytes, 32 bits, for now
     override fun isInt(): Boolean = true
 }
 
-class FloatType(val name:String) : TypeDef()
+class CharType(val name:String = "char") : TypeDef()
+{
+    override fun size(): Int = 1 // 1 bytes, 8 bits
+    override fun isChar(): Boolean = true
+}
+
+class ShortType(val name:String = "short") : TypeDef()
+{
+    override fun size(): Int = 2 // 2 bytes, 16 bits
+    override fun isShort(): Boolean = true
+}
+
+class FloatType(val name:String = "float") : TypeDef()
 {
     override fun size(): Int = 4 // 4 bytes, 32 bits, for now
     override fun isFloat(): Boolean = true
@@ -35,7 +49,7 @@ class StructType(val name:String, var members:List<Member>) : TypeDef()
     }
 }
 
-class ArrayType(val baseTypeDesc: TypeDesc, val dims: IntArray) : TypeDef(){
+class ArrayType(val baseType: TypeDef, val dims: IntArray) : TypeDef(){
     override fun size(): Int{
         TODO("array size not implemented")
     }

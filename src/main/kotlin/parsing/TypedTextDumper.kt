@@ -2,6 +2,7 @@ package parsing
 
 import ast.DefinedFunction
 import ast.resolveSymbols
+import ast.resolveTypes
 import ast.toAst
 import me.tomassetti.kolasu.model.multilineString
 import org.antlr.v4.runtime.ANTLRInputStream
@@ -36,9 +37,13 @@ fun main(args: Array<String>) {
             println(ent.body.multilineString())
         }
     }*/
+    val typeErrors = root.resolveTypes()
+    typeErrors.forEach {
+        println("${it.message}, at ${it.position}")
+    }
     val errors = root.resolveSymbols()
     errors.forEach{
-        println("symbol resolver - ${it.message}, at ${it.position}")
+        println("${it.message}, at ${it.position}")
     }
     //println(root.multilineString())
     // readExampleCode is a simple function that read the code of our example file
