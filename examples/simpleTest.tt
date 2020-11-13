@@ -4,7 +4,7 @@ int a, b = 4, c, d = 2;
 // a = 10;  // illegal, statement is not allowed in global scope, syntax error.
 float f1, f2 = 2;
 int[4][4] matrix;
-int[] intPt;
+int[] intPtr;
 struct Point pt1, pt2;
 struct Line line;
 
@@ -26,10 +26,14 @@ struct Square{
 
 
 float f3;
+struct Square[5] shapes;
 
-int main (void){
+int main (int arg){
     int score1, score2;
+    struct Line line;
+    struct Points pts;
     float ave = 1;
+
     if(ave > 1){
         int ave2 = 2;
         ave = 3 + 4 * f01 - f2 + 4 / 2 + 10;
@@ -45,6 +49,15 @@ int average (int a, int b) {
 }
 
 // function with array parameters
-int average2(int[] scores, int length){
-    return 0;
+int getHighestScore(int[] scores, int length){
+    int highest = 0;
+    while (idx < length){
+        struct Shapes[5] shapes;
+        int score = scores[idx];
+        if(score > highest){
+            struct Points pts;
+            highest = score;
+        }
+    }
+    return highest;
 }

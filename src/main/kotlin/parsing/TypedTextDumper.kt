@@ -21,6 +21,8 @@ fun lexerForCode(code: String) = TypedTextLexer(ANTLRInputStream(StringReader(co
 fun parseCode(code: String) : TypedTextParser.Compilation_unitContext = TypedTextParser(CommonTokenStream(lexerForCode(code))).compilation_unit()
 
 fun main(args: Array<String>) {
+    // readExampleCode is a simple function that read the code of our example file
+    //println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
     val parseResult = AntlrParserFacade.parse(readExampleCode())
     if (!parseResult.isCorrect()){
         parseResult.errors.forEach{
@@ -46,6 +48,5 @@ fun main(args: Array<String>) {
         println("${it.message}, at ${it.position}")
     }
     //println(root.multilineString())
-    // readExampleCode is a simple function that read the code of our example file
-    //println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
+
 }

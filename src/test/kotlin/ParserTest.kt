@@ -30,6 +30,24 @@ class ParserTest {
     }
 
     @test
+    fun expressionWithUnaryExpr() {
+        val code = """int a=-10;
+                    |float f1=-2*-a;""".trimMargin("|")
+
+        // AntlrParserFacade.parse(code).isCorrect() // should check whether there is any error?
+        val ast = AntlrParserFacade.parse(code).root!!.toAst() // result is Compilation_unit
+        // check the entities
+        val combined = ast.entities.filterIsInstance<DefinedVariables>()
+        val total = combined.map { it.vars }.flatten()
+        assertEquals(2, total.size)
+        val initExp1 = total[0].initExp as UnaryExp
+        assertEquals("-", initExp1.op)
+        val initExp2 = total[1].initExp as BinaryExp
+        assertTrue(initExp2.leftExp is UnaryExp)
+        assertTrue(initExp2.rightExp is UnaryExp)
+    }
+
+    @test
     fun variableInFunctionWithInitExpr() {
         val code = """int checkIf(void){
                     |   int a, b=10, c;

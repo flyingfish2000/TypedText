@@ -58,6 +58,15 @@ typeref_base
 // basic types and array types
 // for arrays, when you define a variable of array table, you have to specify the array dimensions, i.e. int[3][3]
 // but for functions, it is allowed to have a parameter of array type without specific dimensions, i.e. float average(int[] scores, length)
+// however, if we support int[] as return type of a function, we have to allow the definition of empty dimension arrays
+// for example, int[] scores = getAllScores();
+// NO point type: follow the trend in Java and C#, structure can be "reference" type by definition. for example:
+// struct TreeNode{
+//      int payLoad;
+//      struct TreeNode left;
+//      struct TreeNode right;
+//  }
+//  in C/C++, this is cyclic difinition, but allowed in Java.
 typeref
 locals [int dimCount=0;]
     : typeref_base ('['{$dimCount++;} dimens += INTEGER_NUM? ']')*
@@ -124,7 +133,15 @@ expr1
     : left=term ( op+=('*' | '/' | '%') right+=term)*
     ;
 
+// prefix, such as unary operators, is useful, for example, a= -4; without unary -, one has to write a = 0 - 4;
+// this definition only allows one optional prefix, -4 or -a[3] is ok, but not +4, or --1
+// cast should come before the unary operator, for example, a = (int)-3.14, or int a = (int)(f/2.0);
+// note: (int)(float)b is not considered legal
 term
+    : ('(' typeCast = type ')')? prefix=('-' | '!')? primary_term
+    ;
+
+primary_term
     : primary (posfixes+=postfix)*
     ;
 

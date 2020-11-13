@@ -1,6 +1,7 @@
 package ast
 
 import me.tomassetti.kolasu.model.*
+import types.TypeDesc
 
 interface Statement : Node
 
@@ -54,4 +55,8 @@ data class AssignExpr(val term: Expression, val valExp : Expression, override va
 
 data class BinaryExp(val leftExp: Expression, val op: String, val rightExp : Expression? = null, override val position: Position? = null) : Expression
 
+data class UnaryExp(val op: String, val exp : Expression, override val position: Position? = null) : Expression
+
+// cast an expression to another type, (int)2.5, (int)(3.14*2.5* a), etc
+data class TypeCastExp(val targetType: TypeDesc, val exp: Expression, override val position: Position? = null) : Expression
 

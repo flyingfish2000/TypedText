@@ -269,8 +269,23 @@ fun Expr1Context.toAst(withPos: Boolean = false) : Expression{
     }
 }
 
-// test: a.b.c, a.b[3], a.b[x], fun(x, y+z, 4+5)
+
 fun TermContext.toAst(withPos: Boolean = false): Expression{
+    val primExp = this.primary_term().toAst(withPos)
+    var termExp = primExp
+    val unaryOp = this.prefix
+    if(unaryOp != null){
+        termExp = UnaryExp(unaryOp.text, termExp)
+    }
+    if(this.typeCast != null){
+        val targetType = this.typeCast.toAst(withPos)
+        termExp = TypeCastExp(targetType, termExp)
+    }
+    return termExp
+}
+
+// test: a.b.c, a.b[3], a.b[x], fun(x, y+z, 4+5)
+fun Primary_termContext.toAst(withPos: Boolean = false): Expression{
     val primExp = this.primary().toAst(withPos)
     var termExp = primExp
     for(ptfix in this.posfixes){
@@ -279,7 +294,7 @@ fun TermContext.toAst(withPos: Boolean = false): Expression{
                 termExp = MemberExp(termExp, ptfix.name().text, toPosition(withPos))
             }
             is ArrayMemberContext -> {
-               termExp = ArrayRefExp(termExp, ptfix.expr().toAst(withPos), toPosition(withPos))
+                termExp = ArrayRefExp(termExp, ptfix.expr().toAst(withPos), toPosition(withPos))
             }
             is FunCallContext -> {
                 termExp = FuncallExpr(termExp, ptfix.args().toAst(withPos), toPosition(withPos))
