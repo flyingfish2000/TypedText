@@ -1,0 +1,40 @@
+struct Point {
+    int x;
+    int y;
+};
+
+struct Line {
+    struct Point ptSrc;
+    struct Point ptDest;
+};
+
+struct Segment{
+    struct Line[10] pts;
+};
+
+struct Square{
+    struct Point[4] pts;
+};
+
+int main (int args)
+{
+    int[10] scores;
+    int idx = 0;
+    struct Segment sgmt;
+    struct Line line;
+    idx = 0;
+    line.ptSrc.x = 10;
+    line.ptDest.y = 3 * (line.ptDest.x + 10);
+
+    sgmt.pts[0].ptSrc.x = 10;
+    sgmt.pts[0].ptSrc.y = 10*(sgmt.pts[0].x + 10);
+
+    while(idx < 10){
+        if(idx == 0)
+            scores[idx] = 10;
+        else{
+            scores[idx] = 3 * (scores[idx-1] + 2);
+        }
+        idx = idx + 1;
+    }
+}

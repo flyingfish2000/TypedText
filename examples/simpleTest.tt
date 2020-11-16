@@ -36,9 +36,10 @@ int main (int arg){
 
     if(ave > 1){
         int ave2 = 2;
-        ave = 3 + 4 * f01 - f2 + 4 / 2 + 10;
+        ave = 3 + 4 * f01 - (int)f2 + 4 / 2 + 10;
         ave2 = average(score1, score2) * 2.0;
-    }
+    }else
+        ave = (float)100;
 }
 
 // function with parameters

@@ -37,9 +37,8 @@ class TypeTable{
     }
 }
 
-fun Compilation_unit.resolveTypes(): List<Error> {
+fun Compilation_unit.resolveTypes(typeTable: TypeTable): List<Error> {
     val errors = LinkedList<Error>()
-    val typeTable = TypeTable()
 
     // get all structure definitions
     val structDefs = this.entities.filterIsInstance<DefinedStruct>()
@@ -73,6 +72,7 @@ fun Compilation_unit.resolveTypes(): List<Error> {
     }
 
     // check the type of each variable is defined, can be primitive type, structure type, or array of primitive or structure type
+    // TODO need to check the init expression for the type cast
     fun resolveVarType(variable :DefinedVariable){
         val typeDesc = variable.typeDesc
         val typeDef = typeTable.getType(typeDesc.typeRef)
@@ -83,6 +83,7 @@ fun Compilation_unit.resolveTypes(): List<Error> {
     }
 
     // block may contain local variable and sub blocks
+    // TODO where to handle the type in the cast expression?? need to add a new resolve expression function.
     fun resolveBlockStatement(blkStmt: BlockStatment){
         for(variable in blkStmt.block.variables)
             resolveVarType(variable)

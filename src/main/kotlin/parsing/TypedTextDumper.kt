@@ -1,9 +1,6 @@
 package parsing
 
-import ast.DefinedFunction
-import ast.resolveSymbols
-import ast.resolveTypes
-import ast.toAst
+import ast.*
 import me.tomassetti.kolasu.model.multilineString
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
@@ -14,7 +11,7 @@ import java.io.FileInputStream
 import whu.typedtext.TypedTextLexer
 import whu.typedtext.TypedTextParser
 
-fun readExampleCode() = FileInputStream("examples/simpleTest.tt").bufferedReader().use { it.readText() }
+fun readExampleCode() = FileInputStream("examples/RefTest.tt").bufferedReader().use { it.readText() }
 
 fun lexerForCode(code: String) = TypedTextLexer(ANTLRInputStream(StringReader(code)))
 
@@ -39,14 +36,18 @@ fun main(args: Array<String>) {
             println(ent.body.multilineString())
         }
     }*/
-    val typeErrors = root.resolveTypes()
+    var typeTable = TypeTable()
+    val typeErrors = root.resolveTypes(typeTable)
     typeErrors.forEach {
         println("${it.message}, at ${it.position}")
     }
+
     val errors = root.resolveSymbols()
     errors.forEach{
         println("${it.message}, at ${it.position}")
     }
+
+    root.validate(typeTable)
     //println(root.multilineString())
 
 }
