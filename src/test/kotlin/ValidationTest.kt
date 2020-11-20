@@ -133,7 +133,7 @@ class ValidationTest {
         errors.forEach {
             println("${it.message}, at ${it.position}")
         }
-        assertEquals(6, errors.size) // invalid, ptDes is not a member, seg is not a valid member
+        assertEquals(2, errors.size) // invalid, ptDes is not a member, seg is not a valid member
     }
 
     @test
@@ -201,5 +201,64 @@ class ValidationTest {
             println("${it.message}, at ${it.position}")
         }
         assertEquals(2, errors.size) // invalid, score is not an array
+    }
+
+    @test
+    fun checkInvalidLHS() {
+        val code = """struct Point {
+        |   int x;
+        |   int y;
+        |};
+        | int average(int a, int b){
+        |   return (a+b)/2;
+        | }
+        |int main (int args)
+        |{
+        |   int a = 10;
+        |   int b, c;
+        |   int average2 = 10;
+        |   // b+c = a; // this is syntax error.
+        |   10 = a;
+        |   average = 10; // in theory, it is legal to assign a value (address) to a function variable.
+        |   average(3, 4) = a;
+        |   a = average2(b, c);
+        |}""".trimMargin("|")
+        val root = AntlrParserFacade.parse(code).root!!.toAst() // result is Compilation_unit
+        var typeTable = TypeTable()
+        root.resolveTypes(typeTable)
+        root.resolveSymbols()
+        val errors = root.validate(typeTable)
+        errors.forEach {
+            println("${it.message}, at ${it.position}")
+        }
+        assertEquals(3, errors.size) // two errors
+    }
+
+    @test
+    fun checkValidLHS() {
+        val code = """struct Point {
+        |   int x;
+        |   int y;
+        |};
+        | int average(int a, int b){
+        |   return (a+b)/2;
+        | }
+        |int main (int args)
+        |{
+        |   struct Point pt; 
+        |   int[10] a = 10;
+        |   int b, c;
+        |   a[10] = 15;
+        |   pt.x = average(3, 4);
+        |}""".trimMargin("|")
+        val root = AntlrParserFacade.parse(code).root!!.toAst() // result is Compilation_unit
+        var typeTable = TypeTable()
+        root.resolveTypes(typeTable)
+        root.resolveSymbols()
+        val errors = root.validate(typeTable)
+        errors.forEach {
+            println("${it.message}, at ${it.position}")
+        }
+        assertEquals(0, errors.size) // no errors
     }
 }

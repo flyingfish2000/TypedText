@@ -40,7 +40,7 @@ fun Compilation_unit.validate(typeTable: TypeTable): List<Error> {
                 if(targetType is ArrayType)
                     return targetType.baseType
                 else
-                    errors.add(Error("Validation Check: expression ${expr.varExp.toString()} is not array type.", null))
+                    errors.add(Error("Validation Check: expression ${expr.varExp.toString()} is not array type", null))
             } else{
                 // varExp is not of Array type
                 errors.add(Error("Validation Check: expression ${expr.varExp.toString()} is not array type: ", expr.varExp.position))
@@ -54,14 +54,19 @@ fun Compilation_unit.validate(typeTable: TypeTable): List<Error> {
                     if (memberDef != null) {
                         return memberDef.typeDesc.typeDef
                     } else
-                        errors.add(Error("Validation Check: member ${member} is not a valid member: ", expr.position))
+                        errors.add(Error("Validation Check: identifier ${member} is not a valid member: ", expr.position))
                 }else
                     errors.add(Error("Validation Check: expression is not a valid struct type: ", expr.position))
             }else
                 errors.add(Error("Validation Check: expression is not struct type: ", expr.varExp.position))
         }
-        //throw IllegalArgumentException("illegal member or type in expression.")
-        return null
+        //throw exception so that if part of the variable expression is wrong, no need to continue; otherwise, keeps reporting errors.
+        throw IllegalArgumentException("illegal member or type in expression.")  //return null,
+    }
+
+    fun checkExpression(expr: Expression){
+        if((expr is MemberExp) || (expr is ArrayRefExp))
+            checkCompositeExpr(expr)
     }
 
     fun validateExpression(expr: Expression) {
@@ -72,20 +77,30 @@ fun Compilation_unit.validate(typeTable: TypeTable): List<Error> {
             is MemberExp -> {
                 try {
                     checkCompositeExpr(expr)
-                }catch (e: IllegalArgumentException){null}
+                }catch (e: IllegalArgumentException){null }
             }
             is ArrayRefExp ->{
-                checkCompositeExpr(expr)
+                try {
+                    checkCompositeExpr(expr)
+                }catch (e: IllegalArgumentException){ null }
             }
             is FuncallExpr ->{
-                //resolveExpression(expr.funExp, symbolTable)
+                // check whether it is really a function.
+                val func = expr.funExp as VariableExp
+                if(!(func.definition is DefinedFunction))
+                    errors.add(Error("Validation Check: ${func} is not a function.", expr.position))
                 //expr.args.forEach{
                 //    resolveExpression(it, symbolTable)
                 //}
             }
             is AssignExpr ->{
                 // check the LHS first
-                checkCompositeExpr(expr.term)
+                if (!(expr.term is LHSExp)){
+                    errors.add(Error("Validation Check: ${expr.term} can not be assigned.", expr.term.position))
+                }
+                try {
+                    checkExpression(expr.term)
+                }catch (e: IllegalArgumentException){null}
                 validateExpression(expr.valExp)
             }
             is BinaryExp -> {

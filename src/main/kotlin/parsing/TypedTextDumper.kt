@@ -11,7 +11,7 @@ import java.io.FileInputStream
 import whu.typedtext.TypedTextLexer
 import whu.typedtext.TypedTextParser
 
-fun readExampleCode() = FileInputStream("examples/RefTest.tt").bufferedReader().use { it.readText() }
+fun readExampleCode() = FileInputStream("examples/ExpTest.tt").bufferedReader().use { it.readText() }
 
 fun lexerForCode(code: String) = TypedTextLexer(ANTLRInputStream(StringReader(code)))
 
@@ -19,7 +19,7 @@ fun parseCode(code: String) : TypedTextParser.Compilation_unitContext = TypedTex
 
 fun main(args: Array<String>) {
     // readExampleCode is a simple function that read the code of our example file
-    //println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
+    // println(toParseTree(parseCode(readExampleCode()), TypedTextParser.VOCABULARY).multiLineString())
     val parseResult = AntlrParserFacade.parse(readExampleCode())
     if (!parseResult.isCorrect()){
         parseResult.errors.forEach{
