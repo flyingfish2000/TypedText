@@ -12,6 +12,8 @@ class TypeTable{
         table[ShortTypeRef()] = ShortType()
         table[IntegerTypeRef()] = IntegerType()
         table[FloatTypeRef()] = FloatType()
+        table[VoidTypeRef()] = VoidType()
+        table[StringTypeRef()] = StringType()
     }
 
     fun getType(typeRef: TypeRef):TypeDef?{

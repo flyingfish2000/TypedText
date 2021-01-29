@@ -24,6 +24,10 @@ abstract class NamedTypeRef(val name: String, position: Position? = null) : Type
     }
 }
 
+class VoidTypeRef(name: String = "void", position: Position? = null) : NamedTypeRef(name, position)
+
+class StringTypeRef(name: String = "string", position: Position? = null) : NamedTypeRef(name, position)
+
 class IntegerTypeRef(name: String = "int", position: Position? = null) : NamedTypeRef(name, position){
 
 }

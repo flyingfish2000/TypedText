@@ -52,6 +52,7 @@ typeref_base
     | INT                   # intType
     | LONG                  # longType
     | FLOAT                 # floatType
+    | STRING                # stringType
     | STRUCT IDENTIFIER     # structType
     ;
 
@@ -159,6 +160,8 @@ primary
     : INTEGER_NUM   #intLit
     | FLOAT_NUM     #floatLit
     | IDENTIFIER    #primarId
+    | STRING_LITERAL    #stringLit
+    | CHAR_LITERAL      #charLit
     | '(' expr ')'  #primaryExp
     ;
 
@@ -172,6 +175,7 @@ LONG     : 'long';
 FLOAT    : 'float';
 UNION    : 'union';
 STRUCT   : 'struct';
+STRING   : 'string';
 ENUM     : 'enum';
 STATIC   : 'static';
 EXTERN   : 'extern';
@@ -199,7 +203,20 @@ IDENTIFIER
         ;
 
 INTEGER_NUM     : [0-9]+ ;
-FLOAT_NUM      : INTEGER_NUM '.' INTEGER_NUM; 
+FLOAT_NUM      : INTEGER_NUM '.' INTEGER_NUM;
+CHAR_LITERAL:       '\'' (~['\\\r\n] | EscapeSequence) '\'';
+STRING_LITERAL:     '"' (~["\\\r\n] | EscapeSequence)* '"';
+
 WS  :   [ \t\n\r]+ -> channel(1); 
 SL_COMMENT
     :   '//' .*? '\n' -> channel(2); // channel(COMMENTS)   // single line comment
+
+fragment EscapeSequence
+    : '\\' [btnfr"'\\]
+    | '\\' ([0-3]? [0-7])? [0-7]
+    | '\\' 'u'+ HexDigit HexDigit HexDigit HexDigit
+    ;
+
+fragment HexDigit
+    : [0-9a-fA-F]
+    ;

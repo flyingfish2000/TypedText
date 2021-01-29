@@ -2,6 +2,7 @@ package types
 // define the types,
 abstract class TypeDef{
     abstract fun size(): Int
+    open fun isVoid(): Boolean = false
     open fun isChar(): Boolean = false
     open fun isShort(): Boolean = false
     open fun isInt(): Boolean =  false
@@ -9,7 +10,19 @@ abstract class TypeDef{
     open fun isArray(): Boolean = false
     open fun isStruct(): Boolean = false
     open fun isFunction(): Boolean = false
+    open fun isString(): Boolean = false
 }
+
+class VoidType(): TypeDef(){
+    override fun size(): Int = 4; // Void is pointer taking 4 bytes
+    override fun isVoid(): Boolean = true
+}
+
+class StringType(): TypeDef(){
+    override fun size(): Int = 256; // what is the size of a string type? hardcoded to 256 for now
+    override fun isString(): Boolean = true
+}
+
 // for the family of "int" types, including short, int, long
 class IntegerType(val name:String = "int") : TypeDef()
 {

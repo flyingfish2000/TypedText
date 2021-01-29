@@ -36,6 +36,10 @@ data class UnknownExp(val exp:String = "unknown", override val position: Positio
 
 data class IntLiteral(val value: String, override val position: Position? = null) : Expression
 
+data class CharLiteral(val value: String, override val position: Position? = null) : Expression
+
+data class StringLiteral(val value: String, override val position: Position? = null) : Expression
+
 data class FloatLiteral(val value: String, override val position: Position? = null) : Expression
 
 data class VariableExp(val varName: String, override val position: Position? = null) : LHSExp() {

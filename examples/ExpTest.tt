@@ -3,7 +3,10 @@ int main (void)
     int c = -4;
     int d, e = 4;
     float f2 = -2.0 * -2;
-    d + e = c;
+    string msg = "Hello, World!";
+    char ch = 'a';
+
     d = (int)-f2/2.0;
     e = (int)(-f2/2.0);
+
 }

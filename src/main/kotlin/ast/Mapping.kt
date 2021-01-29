@@ -29,7 +29,13 @@ fun Typeref_baseContext.toAst(withPos: Boolean = false): TypeRef{
     // create typeref based on type name, VOID, CHAR, STRUCT IDENTIFIER
     when(this){
         is VoidTypeContext -> {
-            println("Typeref_base: Void type")
+            return VoidTypeRef("void", toPosition((withPos)))
+        }
+        is CharTypeContext -> {
+            return CharTypeRef("char", toPosition(withPos))
+        }
+        is StringTypeContext -> {
+            return StringTypeRef("string", toPosition(withPos))
         }
         is IntTypeContext -> {
             //println("Integer type")
