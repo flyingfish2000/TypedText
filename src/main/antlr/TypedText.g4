@@ -166,7 +166,6 @@ primary
     ;
 
 // lexical rules from here
-
 VOID    : 'void';
 CHAR    : 'char';
 SHORT   : 'short';
